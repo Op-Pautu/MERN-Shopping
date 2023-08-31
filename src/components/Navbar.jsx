@@ -22,7 +22,7 @@ const Left = styled.div`
 const Language = styled.span`
   font-size: 14px;
   cursor: pointer;
-  ${mobile({display: "none"})};
+  ${mobile({ display: "none" })}
 `;
 const SearchContainer = styled.div`
   border: 1px solid lightgray;

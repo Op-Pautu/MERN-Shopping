@@ -8,9 +8,11 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
+import { mobile } from "../responsive";
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  ${mobile({ flexDirection: "column", gap: "10px" })}
 `;
 const Left = styled.div`
   flex: 1;
@@ -43,6 +45,7 @@ const SocialIcon = styled.div`
 const Center = styled.div`
   flex: 1;
   padding: 20px;
+  ${mobile({ display: "none" })}
 `;
 const Title = styled.h3`
   margin-bottom: 30px;
@@ -64,6 +67,7 @@ const ListItem = styled.li`
 const Right = styled.div`
   flex: 1;
   padding: 20px;
+  ${mobile({ backgroundColor: "#fff8f8" })}
  
 
 `;
@@ -128,7 +132,7 @@ const Footer = () => {
           <FaPhoneAlt style={{marginRight:"10px"}}/> +1 234 56 78
         </ContactItem>
         <ContactItem>
-          <AiOutlineMail style={{marginRight:"10px"}} /> contact@op.dev
+          <AiOutlineMail style={{marginRight:"10px"}} /> contact@op.dev 
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
       </Right>
