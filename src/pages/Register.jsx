@@ -32,6 +32,7 @@ const Input = styled.input`
   min-width: 40%;
   margin: 20px 10px 0px 0px;
   padding: 10px;
+  border-radius: 5px;
 `;
 const Agreement = styled.span`
   font-size: 12px;
@@ -44,6 +45,11 @@ const Button = styled.button`
   background-color: teal;
   color: white;
   cursor: pointer;
+  border-radius: 8px;
+  transition: all 1s ease;
+  &:hover {
+    background-color: #1257579b ;
+  }
 `;
 
 const Register = () => {
