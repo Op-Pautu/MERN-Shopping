@@ -5,13 +5,6 @@ const Product = require('../models/Product');
 
 const router = express.Router()
 
-
-const hashPassword = async (password) => {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    return hashedPassword;
-  };
-
 // CREATE 
 router.post('/', verifyTokenAndAdmin, async(req, res) => {
     const newProduct = new Product(req.body)
