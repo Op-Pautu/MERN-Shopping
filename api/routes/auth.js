@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt');
 const User = require('../models/User')
-
+const jwt = require('jsonwebtoken')
 // REGISTER
 router.post('/register', async(req,res)=> {
     const salt = await bcrypt.genSalt(10); 
@@ -38,8 +38,16 @@ router.post('/login', async(req,res)=> {
           if (!passwordMatch) {
             return res.status(401).json({ message: 'Invalid password' });
           } 
+
+          const accessToken = jwt.sign({
+            id: user._id,
+            isAdmin: user.isAdmin,
+
+          }, process.env.JWT_ACCESS_TOKEN,
+            {expiresIn: "3d"}
+          )
           const {password, ...others} = user._doc;
-          res.status(200).json(others);
+          res.status(200).json({...others, accessToken});
     } catch (error) {
         res.status(500).json(error)
     }
