@@ -48,12 +48,13 @@ const ProductList = () => {
       [e.target.name]: value
     })
   }
-  console.log(filters)
+     // Log sort
+
   return (
     <Container>
       <Navbar />
       <Announcement />
-      <Title>Dresses</Title>
+      <Title>{cat.toLocaleUpperCase()}</Title>
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products:</FilterText>
@@ -61,12 +62,13 @@ const ProductList = () => {
             <Option disabled>
               Color
             </Option>
-            <Option>White</Option>
-            <Option>Black</Option>
-            <Option>Red</Option>
-            <Option>Blue</Option>
-            <Option>Yellow</Option>
-            <Option>Green</Option>
+            <Option>gray</Option> 
+            <Option>white</Option> 
+            <Option>black</Option>
+            <Option>red</Option>
+            <Option>blue</Option>
+            <Option>yellow</Option>
+            <Option>green</Option>
           </Select>
           <Select name="size" onChange={handleFilters}>
             <Option disabled>
@@ -81,14 +83,14 @@ const ProductList = () => {
         </Filter>
         <Filter>
           <FilterText>Sort Products:</FilterText>
-          <Select onChange={e=>setSort(e.target.value)}>
-            <Option value="newest" selected>Newest</Option>
+          <Select onChange={(e) => setSort(e.target.value)}>
+            <Option value="newest">Newest</Option>
             <Option value="asc">Price (lowest to highest)</Option>
             <Option value="desc">Price (highest to lowest)</Option>
           </Select>
         </Filter>
       </FilterContainer>
-      <Products cat={cat} filters={filters} sort={sort}/>
+      <Products cat={cat} filters={filters} sort={sort} setSort={setSort}/>
       <Newsletter />
       <Footer />
     </Container>
