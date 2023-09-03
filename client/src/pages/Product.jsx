@@ -129,7 +129,10 @@ const Product = () => {
   const id = location.pathname.split("/")[2]
 
   const [product, setProduct] = useState({})
-
+  const [quantity, setQuantity] = useState(1)
+  const [color, setColor] = useState("")
+  const [size, setSize] = useState("")
+  
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -141,6 +144,17 @@ const Product = () => {
     }
     getProduct()
   }, [id])
+
+  const handleQuantity = (type) => {
+    if (type === 'decrease') {
+      quantity > 1 && setQuantity(quantity - 1)
+    } else {
+      setQuantity(quantity + 1)
+    }
+  }
+  const handleClick = () => {
+    
+  }
   return (
     <Container>
       <Navbar />
@@ -162,20 +176,20 @@ const Product = () => {
               <FilterColor color="darkblue" />
               <FilterColor color="gray" />
               {/* TODO 
-              {product.color.map(c=> (
-                <FilterColor color={c} key={c}/>
+              {product.color?.map(c=> (
+                <FilterColor color={c} key={c} onClick={()=> setColor(c)}/>
               ))} */}
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize>
+              <FilterSize onChange={(e) => setSize(e.target.value)}>
                 <FilterSizeOption>XS</FilterSizeOption>
                 <FilterSizeOption>S</FilterSizeOption>
                 <FilterSizeOption>M</FilterSizeOption>
                 <FilterSizeOption>L</FilterSizeOption>
                 <FilterSizeOption>XL</FilterSizeOption>
                   {/* TODO
-                {product.size.map(s=>(
+                {product.size?.map(s=>(
                   <FilterSizeOption key={s}>{s}</FilterSizeOption>
                 ))} */}
               </FilterSize>
@@ -183,11 +197,11 @@ const Product = () => {
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <IoRemoveSharp />
-              <Amount>1</Amount>
-              <IoAddSharp />
+              <IoRemoveSharp onClick={() =>handleQuantity('decrease')}/>
+              <Amount>{quantity}</Amount>
+              <IoAddSharp onClick={() =>handleQuantity('increase')}/>
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick={handleClick}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
