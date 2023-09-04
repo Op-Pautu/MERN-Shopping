@@ -11,6 +11,7 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
+import Success from "./pages/Success";
 const user = true
 
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: user ? <Navigate to="/"/> :   <Login/> 
+  },
+  {
+    path: '/success',
+    element: <Success/>
   }
 
 

@@ -5,7 +5,14 @@ import { styled } from "styled-components";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
+import { useState } from "react";
+import { useEffect } from "react";
+import { userRequest } from "../requestMethods";
+import { useNavigate } from "react-router-dom";
 
+// const KEY = "pk_test_51NlaEGSDQljpOjxtD0uDicd6Q5mTNexBU4jB04V7do8YVjq0qmT6BBdFNYD2ag1T03xAoa9ebIuJLJRynMaQ0kEx00nkLHScMk"
+const KEY = import.meta.env.VITE_STRIPE
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -146,6 +153,27 @@ const Button = styled.button`
 `;
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
+  const [stripeToken, setStripeToken] = useState(null)
+  const navigate = useNavigate()
+
+  const onToken = (token)=> {
+    setStripeToken(token)
+  }
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await userRequest.post('/checkout/payment', {
+          tokenId: stripeToken.id,
+          amount: 500,
+        })
+        navigate('/success', {data: res.data})
+      
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    stripeToken  && makeRequest()
+  }, [stripeToken, cart.total, navigate])
   return (
     <Container>
       <Navbar />
@@ -185,7 +213,9 @@ const Cart = () => {
                     <ProductAmount>{product.quantity}</ProductAmount>
                     <IoRemoveSharp />
                   </ProductAmountContainer>
-                  <ProductPrice>$ {product.price * product.quantity}</ProductPrice>
+                  <ProductPrice>
+                    $ {product.price * product.quantity}
+                  </ProductPrice>
                 </PriceDetail>
               </Product>
             ))}
@@ -209,7 +239,18 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            <StripeCheckout
+              name="Op Shop"
+              image="https://avatars.githubusercontent.com/u/1486366?v=4"
+              billingAddress
+              shippingAddress
+              description={`Your total is $${cart.total}`}
+              amount={cart.total * 100}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <Button>CHECKOUT NOW</Button>
+            </StripeCheckout>
           </Summary>
         </Bottom>
       </Wrapper>
