@@ -8,7 +8,8 @@ import { mobile } from "../responsive";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { publicRequest } from "../requestMethods";
-
+import { addProduct } from "../redux/cartRedux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div``;
 
@@ -16,7 +17,6 @@ const Wrapper = styled.div`
   padding: 50px;
   display: flex;
   ${mobile({ padding: "10px", flexDirection: "column" })}
-  
 `;
 
 const ImgContainer = styled.div`
@@ -28,14 +28,12 @@ const Image = styled.img`
   height: 90vh;
   object-fit: cover;
   ${mobile({ height: "40vh" })}
-
 `;
 
 const InfoContainer = styled.div`
   flex: 1;
   padding: 0px 50px;
   ${mobile({ padding: "10px" })}
-  
 `;
 
 const Title = styled.h1`
@@ -91,7 +89,6 @@ const AddContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   ${mobile({ width: "100%" })}
- 
 `;
 
 const AmountContainer = styled.div`
@@ -119,42 +116,43 @@ const Button = styled.button`
   color: white;
   font-weight: 500;
   border-radius: 10px;
-  &:hover{
-      background-color: #006b6b;
+  &:hover {
+    background-color: #006b6b;
   }
 `;
 
 const Product = () => {
-  const location = useLocation()
-  const id = location.pathname.split("/")[2]
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
 
-  const [product, setProduct] = useState({})
-  const [quantity, setQuantity] = useState(1)
-  const [color, setColor] = useState("")
-  const [size, setSize] = useState("")
-  
+  const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
+
+  const dispatch = useDispatch();
   useEffect(() => {
     const getProduct = async () => {
       try {
-          const res = await publicRequest.get('/products/find/' + id)
-          setProduct(res.data)
+        const res = await publicRequest.get("/products/find/" + id);
+        setProduct(res.data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
-    getProduct()
-  }, [id])
+    };
+    getProduct();
+  }, [id]);
 
   const handleQuantity = (type) => {
-    if (type === 'decrease') {
-      quantity > 1 && setQuantity(quantity - 1)
+    if (type === "decrease") {
+      quantity > 1 && setQuantity(quantity - 1);
     } else {
-      setQuantity(quantity + 1)
+      setQuantity(quantity + 1);
     }
-  }
+  };
   const handleClick = () => {
-    
-  }
+    dispatch(addProduct({ ...product, quantity, color, size }));
+  };
   return (
     <Container>
       <Navbar />
@@ -164,10 +162,8 @@ const Product = () => {
           <Image src={product.img} />
         </ImgContainer>
         <InfoContainer>
-          <Title style={{ textTransform: 'capitalize' }}>{product.title}</Title>
-          <Desc>
-            {product.desc}
-          </Desc>
+          <Title style={{ textTransform: "capitalize" }}>{product.title}</Title>
+          <Desc>{product.desc}</Desc>
           <Price>$ {product.price}</Price>
           <FilterContainer>
             <Filter>
@@ -188,7 +184,7 @@ const Product = () => {
                 <FilterSizeOption>M</FilterSizeOption>
                 <FilterSizeOption>L</FilterSizeOption>
                 <FilterSizeOption>XL</FilterSizeOption>
-                  {/* TODO
+                {/* TODO
                 {product.size?.map(s=>(
                   <FilterSizeOption key={s}>{s}</FilterSizeOption>
                 ))} */}
@@ -197,9 +193,9 @@ const Product = () => {
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <IoRemoveSharp onClick={() =>handleQuantity('decrease')}/>
+              <IoRemoveSharp onClick={() => handleQuantity("decrease")} />
               <Amount>{quantity}</Amount>
-              <IoAddSharp onClick={() =>handleQuantity('increase')}/>
+              <IoAddSharp onClick={() => handleQuantity("increase")} />
             </AmountContainer>
             <Button onClick={handleClick}>ADD TO CART</Button>
           </AddContainer>

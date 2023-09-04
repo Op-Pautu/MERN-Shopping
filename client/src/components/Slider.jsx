@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   transition: all 1.5s ease;
-  transform: translateX(${props=>props.slideIndex * -100}vw);
+  transform: translateX(${props=>props.slideindex * -100}vw);
 `;
 const Slide = styled.div`
   display: flex;
@@ -51,7 +51,7 @@ const ImgContainer = styled.div`
 `;
 const Image = styled.img`
   height: 80%;
-  padding-left: ${props => props.isFirstSlide ? '100px' : '0'}; /* Apply padding only for the first slide */
+  padding-left: ${props => props.isfirstslide ? '100px' : '0'}; /* Apply padding only for the first slide */
 `;
 
 const InfoContainer = styled.div`
@@ -91,11 +91,11 @@ const Slider = () => {
       <Arrow direction="left" onClick={() => handleClick('left')}>
         <MdOutlineArrowLeft />
       </Arrow>
-      <Wrapper slideIndex={slideIndex}>
+      <Wrapper slideindex={slideIndex}>
         {sliderItems.map((item, index) => (
           <Slide bg={item.bg}  key={item.id}>
             <ImgContainer>
-              <Image src={item.img} isFirstSlide={index === 0} />
+              <Image src={item.img} isfirstslide={index === 0 ? 'true' : 'false'} />
             </ImgContainer>
             <InfoContainer>
               <Title>{item.title}</Title>

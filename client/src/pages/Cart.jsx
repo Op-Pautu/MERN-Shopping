@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import { styled } from "styled-components";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import { mobile } from "../responsive";
+import { useSelector } from "react-redux";
 
 const Container = styled.div``;
 
@@ -145,6 +146,7 @@ const Button = styled.button`
   font-weight: 600;
 `;
 const Cart = () => {
+  const cart = useSelector(state => state.cart)
   return (
     <Container>
       <Navbar />
