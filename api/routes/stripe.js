@@ -1,5 +1,6 @@
-const router = require('express').Router()
-const stripe = require('stripe')(process.env.STRIPE_KEY)
+const router = require("express").Router();
+const KEY = process.env.STRIPE_KEY;
+const stripe = require("stripe")(KEY);
 
 router.post('/payment', (req, res) => {
     stripe.charges.create({
@@ -17,4 +18,19 @@ router.post('/payment', (req, res) => {
 })
 
 
-module.exports = router
+// const YOUR_DOMAIN = "http://localhost:5000";
+
+// router.post("/payment", async (req, res) => {
+//   const session = await stripe.checkout.sessions.create({
+//     source: req.body.tokenId,
+//     amount: req.body.amount,
+//     currency: "usd",
+//     mode: "payment",
+//     success_url: `${YOUR_DOMAIN}?success=true`,
+//     cancel_url: `${YOUR_DOMAIN}?canceled=true`,
+//   });
+
+//   res.redirect(303, session.url);
+// });
+
+module.exports = router;
