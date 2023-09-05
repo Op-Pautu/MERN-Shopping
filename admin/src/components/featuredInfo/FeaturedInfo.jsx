@@ -1,17 +1,47 @@
 import "./featuredInfo.css";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-
+import { useState } from 'react';
+import { useEffect } from 'react';
+import {userRequest} from '../../requestMethods'
 export default function FeaturedInfo() {
+  const [income, setIncome] = useState([])
+  const [percentage, setPercentage] = useState([])
+
+  useEffect(() => {
+    const getIncome = async () => {
+      try {
+        const res = await userRequest.get("orders/income")
+        setIncome(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    getIncome();
+  }, []);
+  
+  useEffect(() => {
+    if (income.length >= 2) {
+      const percentageValue = ((income[1]?.total - income[0]?.total) / income[0]?.total) * 100;
+      setPercentage(percentageValue);
+    }
+  }, [income]);
+  
   return (
    
     <div className="featured">
       <div className="featuredItem">
         <span className="featuredTitle">Revenue</span>
         <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,415</span>
+          <span className="featuredMoney">${income[1]?.total}</span>
           <span className="featuredMoneyRate">
-            -11.4 <ArrowDownwardIcon  className="featuredIcon negative"/>
+          %{percentage}
+            {percentage < 0 ? (   
+              <ArrowDownwardIcon className="featuredIcon negative" />
+            ) : (
+              <ArrowUpwardIcon className="featuredIcon" />
+            )}
           </span>
         </div>
         <span className="featuredSub">Compared to last month</span>
