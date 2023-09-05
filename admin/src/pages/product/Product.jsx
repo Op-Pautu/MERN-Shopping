@@ -3,17 +3,17 @@ import "./product.css";
 import Chart from "../../components/chart/Chart";
 
 import PublishIcon from "@mui/icons-material/Publish";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../requestMethods";
+import { updateProduct } from "../../redux/apiCalls";
 
 export default function Product() {
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
   const [pStats, setPStats] = useState([]);
-  const product = useSelector((state) =>
-    state.product.products.find((product) => product._id === productId)
-  );
+ 
+  const dispatch = useDispatch();
   const MONTHS = useMemo(
     () => [
       "Jan",
@@ -31,11 +31,54 @@ export default function Product() {
     ],
     []
   );
+  const product = useSelector((state) =>
+  state.product.products.find((product) => product._id === productId)
+);
+  const [formInputs, setFormInputs] = useState({
+    productName: product.title,
+    productDescription: product.desc,
+    productPrice: product.price,
+    inStock: product.inStock,
+  });
+  // const [selectedFile, setSelectedFile] = useState(null);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormInputs((prevInputs) => ({
+      ...prevInputs,
+      [name]: value,
+    }));
+  };
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setSelectedFile(file); // Store the selected file in state
+  // };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Create an updated product object with the form inputs
+      const updatedProduct = {
+        ...product,
+        title: formInputs.productName,
+        desc: formInputs.productDescription,
+        price: formInputs.productPrice,
+        inStock: formInputs.inStock,
+      };
+  
+      // Call the updateProduct function from apiCalls to update the product
+      await updateProduct(productId, updatedProduct, dispatch);
+  
+      // Optional: Show a success message or perform any other actions after updating
+    } catch (err) {
+      console.log(err);
+      // Handle errors
+    }
+  };
 
   useEffect(() => {
     const getStats = async () => {
       try {
-        const res = await userRequest  .get("orders/income?pid=" + productId);
+        const res = await userRequest.get("orders/income?pid=" + productId);
         const list = res.data.sort((a, b) => {
           return a._id - b._id;
         });
@@ -62,7 +105,7 @@ export default function Product() {
       </div>
       <div className="productTop">
         <div className="productTopLeft">
-           <Chart data={pStats} dataKey="Sales" title="Sales Performance" />
+          <Chart data={pStats} dataKey="Sales" title="Sales Performance" />
         </div>
         <div className="productTopRight">
           <div className="productInfoTop">
@@ -86,16 +129,35 @@ export default function Product() {
         </div>
       </div>
       <div className="productBottom">
-        <form className="productForm">
+        <form className="productForm" >
           <div className="productFormLeft">
             <label>Product Name</label>
-            <input type="text" placeholder={product.title} />
+            <input
+              type="text"
+              placeholder={formInputs.productName}
+              name="productName"
+              onChange={handleInputChange}
+            />
             <label>Product Description</label>
-            <input type="text" placeholder={product.desc} />
+            <input
+              type="text"
+              placeholder={formInputs.productDescription}
+              name="productDescription"
+              onChange={handleInputChange}
+            />
             <label>Price</label>
-            <input type="text" placeholder={product.price} />
+            <input
+              type="text"
+              placeholder={formInputs.productPrice}
+              name="productPrice"
+              onChange={handleInputChange}
+            />
             <label>In Stock</label>
-            <select name="inStock" id="idStock">
+            <select
+              name="inStock"
+              id="idStock"
+              onChange={handleInputChange}
+            >
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
@@ -106,9 +168,14 @@ export default function Product() {
               <label htmlFor="file">
                 <PublishIcon />
               </label>
-              <input type="file" id="file" style={{ display: "none" }} />
+              <input
+                type="file"
+                id="file"
+                style={{ display: "none" }}
+                // onChange={handleFileChange}
+              />
             </div>
-            <button className="productButton">Update</button>
+            <button className="productButton" onClick={handleFormSubmit}>Update</button>
           </div>
         </form>
       </div>
