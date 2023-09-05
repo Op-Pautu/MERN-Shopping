@@ -1,30 +1,58 @@
+import { useState } from "react";
 import "./newProduct.css";
-
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 export default function NewProduct() {
+
+  const [inputs, setInputs ] = useState({})
+  const [file, setFile ] = useState(null)
+  const [category, setCategory ] = useState([])
+  
+  const handleChange = (e) => {
+    setInputs(prev =>  {
+      return {...prev, [e.target.name]: e.target.value}
+    })
+  }
+ 
+  const handleCategories = (e) => {
+    setCategory(e.target.value.split(','))
+  }
+  const handleClick = (e) => {
+    e.preventDefault()
+    
+  }
+
   return (
     <div className="newProduct">
       <h1 className="addProductTitle">New Product</h1>
       <form className="addProductForm">
         <div className="addProductItem">
           <label>Image</label>
-          <input type="file" id="file" />
+          <input type="file" id="file"  onChange={e =>setFile(e.target.files[0])} />
         </div>
         <div className="addProductItem">
-          <label>Name</label>
-          <input type="text" placeholder="Apple Airpods" />
+          <label>Title</label>
+          <input type="text" placeholder="Apple Airpods" name="title" onChange={handleChange}/>
+        </div>
+        <div className="addProductItem">
+          <label>Description</label>
+          <input type="text" placeholder="description..."  name="description" onChange={handleChange}/>
+        </div>
+        <div className="addProductItem">
+          <label>Price</label>
+          <input type="number" placeholder="100"  name="price" onChange={handleChange}/>
+        </div>
+        <div className="addProductItem">
+          <label>Categories</label>
+          <input type="text" placeholder="jeans, skirts"  onChange={handleCategories}/>
         </div>
         <div className="addProductItem">
           <label>Stock</label>
-          <input type="text" placeholder="123" />
-        </div>
-        <div className="addProductItem">
-          <label>Active</label>
-          <select name="active" id="active">
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+          <select name="inStock" onChange={handleChange}>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
           </select>
         </div>
-        <button className="addProductButton">Create</button>
+        <button onClick="handleClick" className="addProductButton">Create</button>
       </form>
     </div>
   );
