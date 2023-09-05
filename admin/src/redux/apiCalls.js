@@ -1,5 +1,5 @@
-import { publicRequest } from "../requestMethods"
-import { getProductFailure, getProductStart, getProductSuccess } from "./productSlice"
+import { publicRequest, userRequest } from "../requestMethods"
+import { getProductFailure, getProductStart, getProductSuccess, deleteProductStart, deleteProductSuccess, deleteProductFailure } from "./productSlice"
 import { loginFailure, loginStart, loginSuccess } from "./userSlice"
 
 export const login = async (dispatch, user) => {
@@ -25,3 +25,13 @@ export const getProducts = async (dispatch) => {
         dispatch(getProductFailure())
     }
 }
+
+export const deleteProduct = async (id, dispatch) => {
+    dispatch(deleteProductStart());
+    try {
+   //    const res = await userRequest.delete(`/products/${id}`);
+      dispatch(deleteProductSuccess(id));
+    } catch (err) {
+      dispatch(deleteProductFailure());
+    }
+  };
